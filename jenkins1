@@ -1,0 +1,23 @@
+node('agent1') {
+    stage('codecheck') {
+        git branch: 'main', url: 'https://github.com/Chiambem/maven-code.git'
+    }
+    stage('codebuild') {
+        sh 'mvn package'
+    }
+    stage('codetest') {
+        git 'https://github.com/mankinimbom/testingproject.git'
+        sh 'java -jar /home/ubuntu/server1workspace/workspace/Test1/testing.jar'
+    }
+    stage('codetest-message') {
+         echo 'Print message' 
+        echo 'test successfull'
+        emailext body: 'An alert message notification for project CI/CD', subject: 'testing project', to: 'songchaimbem@mail.com'
+    }
+    stage('codedeployqa') {
+        deploy adapters: [tomcat9(credentialsId: 'mytomcat', path: '', url: 'http://3.144.184.41:8080')], contextPath: 'demo', war: '**/*.war'
+    }
+    stage('codedeploy-po') {
+        deploy adapters: [tomcat9(credentialsId: 'mytomcat', path: '', url: 'http://18.216.132.113:8080')], contextPath: 'devops', war: '**/*.war'
+    }
+}
