@@ -11,7 +11,7 @@ node('agent1') {
     }
     stage('codetest-message') {
          echo 'Print message' 
-        echo 'test successfull now'
+        echo 'test successfull now testing'
         emailext body: 'An alert message notification for project CI/CD', subject: 'testing project', to: 'songchaimbem@mail.com'
     }
     stage('codedeployqa') {
